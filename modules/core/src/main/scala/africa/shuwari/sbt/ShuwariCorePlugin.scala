@@ -12,15 +12,13 @@ object ShuwariCorePlugin extends AutoPlugin {
 
   override def trigger: PluginTrigger = allRequirements
 
-  override def buildSettings: Seq[Setting[_]] = baseBuildSettings
-  override def projectSettings: Seq[Setting[_]] =
-    baseProjectSettings ++ Seq(
-      // LocalRootProject / crossScalaVersions := List((LocalRootProject / scalaVersion).value),
-      LocalRootProject / organizationHomepage := None,
-      LocalRootProject / organizationName := "",
-      LocalRootProject / scalaVersion := "3.2.1",
-      LocalRootProject / scmInfo := None
+  override def buildSettings: Seq[Setting[_]] =
+    baseBuildSettings ++ circularReferenceDefaults(
+      scmInfo -> None
     )
+
+  override def projectSettings: Seq[Setting[_]] =
+    baseProjectSettings
 
   object autoImport {
 
@@ -44,7 +42,6 @@ object ShuwariCorePlugin extends AutoPlugin {
   )
 
   private def defaultOrganisationSettings: List[Setting[_]] = List(
-    // organization := ((LocalRootProject / organization) or (LocalRootProject / normalizedName)).value,
     organizationName := "Shuwari Africa Ltd.",
     organizationHomepage := Some(url("https://shuwari.africa")),
     developers := List(
@@ -63,19 +60,16 @@ object ShuwariCorePlugin extends AutoPlugin {
     crossScalaVersions,
     organizationHomepage,
     organizationName,
-    scalaVersion,
-    scmInfo
+    scalaVersion
   ).map(fromRoot(_))
 
   private def baseProjectSettings =
     (List(
-      organizationName,
-      organizationHomepage,
-      organization,
       apiURL,
       developers,
       homepage,
       licenses,
+      organization,
       startYear,
       version
     ).map(fromRoot(_)) :+ pomIncludeRepositorySetting) ++ baseBuildSettings
@@ -83,7 +77,12 @@ object ShuwariCorePlugin extends AutoPlugin {
   private def fromRoot[A](key: SettingKey[A]): Setting[A] =
     key := ((LocalRootProject / key)).value
 
-  // private def scmInfoSetting =
-  //   scmInfo := ((LocalRootProject / scmInfo) ?? None).value
+  private type SettingPair[A] = (SettingKey[A], A)
+
+  private def circularReferenceDefaults(defaults: SettingPair[_]*) = {
+    def circ[A](pair: SettingPair[A]) =
+      pair._1 := Option((LocalRootProject / pair._1).value).getOrElse(pair._2)
+    defaults.map(kv => circ(kv))
+  }
 
 }

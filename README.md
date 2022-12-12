@@ -22,7 +22,8 @@ Preconfigures projects with Shuwari Africa Ltd. project defaults.
   
 Specifically, sets `ThisBuild / crossScalaVersions`, `ThisBuild / organizationHomepage`, `ThisBuild / organizationName`, `ThisBuild / scalaVersion`,
 and `ThisBuild / scmInfo` to the values specified for the root project by default. For example, setting `scalaVersion`
-will also set the same value for `ThisBuild / scalaVersion`.
+will also set the same value for `ThisBuild / scalaVersion`. *Note: No longer resolves circular dependencies caused by existing sbt defaults. the following*
+*settings must be set explicitly for the root project to avoid errors during project launch: `organizationHomepage`, `organizationName`, `scalaVersion`*
 
 Additionally, sets `organizationName`, `organizationHomepage`, `organization`, `apiURL`, `developers`, `homepage`, `licenses`, `startYear`, and `version`
 for all non-root projects to the values specified in the the root project by default. For example, setting `version` for the root project will propagate
@@ -31,13 +32,13 @@ to all subprojects.
 Provides convenience methods for specifying the following common settings. In all cases, the method is available either as a setting or collection of settings
 directly usable as such, or as an extension method to `Project` of the same name.
 
-- `shuwariProject`: Sets default Shuwari Africa Ltd. organisation settings.
+- `shuwariProject`: Sets default Shuwari Africa Ltd. `organizationHomepage`, `organizationName`, and `developers` settings.
 - `notPublished`: Disables publishing of artefacts for the specified project.
 
 For example:
 
 ```scala
-lazy val amazingProject =
+lazy val `amazing-project` =
   project
     .shuwariProject
     .notpublished
@@ -70,12 +71,12 @@ in the project's settings definition.
 For example:
 
 ```scala
-lazy val amazingProject =
+lazy val `amazing-project` =
   project
     .settings(apacheLicensed)
 
 // Convenience extension methods similarly named have also been provided to allow the same with less boilerplate code.
-lazy val amazingProject =
+lazy val `amazing-project` =
   project
     .internalSoftware
 ```

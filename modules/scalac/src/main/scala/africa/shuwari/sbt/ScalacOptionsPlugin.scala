@@ -106,7 +106,7 @@ object ScalaCompileOptionsPlugin extends AutoPlugin {
     }
   }
 
-    def optionsModeResolver = Def.setting {
+  def optionsModeResolver = Def.setting {
     BuildModePlugin.buildMode.value match {
       case DevelopmentBuild => DevMode.asInstanceOf[OptionsMode]
       case IntegrationBuild => CiMode.asInstanceOf[OptionsMode]

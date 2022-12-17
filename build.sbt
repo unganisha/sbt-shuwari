@@ -110,15 +110,15 @@ def publishSettings = List(
       url = url("https://shuwari.com/dev")
     )
   ),
-  pomIncludeRepository := (_ => false),
+  pomIncludeRepository := (_ => false)
 ) ++ pgpSettings ++ aetherSettings
 
 def pgpSettings = List(
-    PgpKeys.pgpSelectPassphrase :=
+  PgpKeys.pgpSelectPassphrase :=
     sys.props
       .get("SIGNING_KEY_PASSPHRASE")
       .map(_.toCharArray),
-        usePgpKeyHex(System.getenv("SIGNING_KEY_ID")),
+  usePgpKeyHex(System.getenv("SIGNING_KEY_ID"))
 )
 
 def aetherSettings = List(

@@ -4,6 +4,8 @@ Collection of [sbt](https://scala-sbt.org) plugins for uniform configuration of 
 as CI and Release related functionality.
 
 May also be used for other projects if the default settings are found useful.
+
+[![Build Status](https://github.com/unganisha/sbt-shuwari/actions/workflows/build.yml/badge.svg)](https://github.com/unganisha/sbt-shuwari/actions/workflows/build.yml)
 __________________________________
 
 ## Core Plugins

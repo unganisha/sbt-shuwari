@@ -1,0 +1,74 @@
+name: "Build B${{ github.run_number }} - ${{ github.ref_name }} (${{ github.sha }})"
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+    tags: [v*]
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  RUNNER_OS: ubuntu-22.04
+
+jobs:
+  test:
+    name: Execute Tests (Java ${{ matrix.java }})
+    strategy:
+      fail-fast: false
+      matrix:
+        java: [8, 17]
+    runs-on: ${{ env.RUNNER_OS }}
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: "temurin"
+          java-version: ${{ matrix.java }}
+
+      - name: Execute Unit Tests
+        run: sbt test
+        
+      - name: Package Project Products
+        run: sbt package
+
+  publish:
+    name: Publish Artefacts
+    needs: [test]
+    if: github.event_name != 'pull_request' && (startsWith(github.ref, 'refs/tags/v'))
+    runs-on: ${{ env.RUNNER_OS }}
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: "temurin"
+          java-version: 8
+
+      - name: Import Signing Key
+        uses: crazy-max/ghaction-import-gpg@v5.2.0
+        with:
+          gpg_private_key: ${{ secrets.OSS_PUBLISH_USER_SIGNING_KEY }}
+          passphrase: ${{ secrets.OSS_PUBLISH_USER_SIGNING_KEY_PASSPHRASE }}
+      - name: Update Signing Key Trust Level
+        run: echo -e "trust\n5\ny" | gpg --batch --no-tty --command-fd 0 --edit-key ${{ secrets.OSS_PUBLISH_USER_SIGNING_KEY_ID }}
+
+      - name: Publish Projects
+        run: sbt aetherDeploy
+        env:
+          PUBLISH_USER: ${{ secrets.OSS_PUBLISH_USER }}
+          PUBLISH_USER_PASSPHRASE: ${{ secrets.OSS_PUBLISH_USER_PASSPHRASE }}
+          SIGNING_KEY_ID: ${{ secrets.OSS_PUBLISH_USER_SIGNING_KEY_ID }}
+          SIGNING_KEY_PASSPHRASE: ${{ secrets.OSS_PUBLISH_USER_SIGNING_KEY_PASSPHRASE }}

@@ -1,4 +1,4 @@
-# shuwari-sbt
+# sbt-shuwari
 
 Collection of [sbt](https://scala-sbt.org) plugins for uniform configuration of Shuwari Africa Ltd. sbt projects, as well
 as CI and Release related functionality.

@@ -1,7 +1,7 @@
 .bloop/
 .bsp/
 .metals/
+.sbt-shuwari/
 .vscode/
 metals.sbt
 target/
-modules/.core/

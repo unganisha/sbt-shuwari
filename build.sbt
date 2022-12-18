@@ -2,10 +2,12 @@ inThisBuild(
   List(
     organization := "africa.shuwari.sbt",
     organizationName := "Shuwari Africa Ltd.",
+    organizationHomepage := Some(url("https://shuwari.africa/dev")),
     licenses := List(
       "Apache-2.0" -> url("https://www.apache.org/licenses/LICENSE-2.0")
     ),
     description := "Collection of sbt plugins for easy initialisation of uniform organisation wide default project settings.",
+    homepage := Some(url("https://github.com/unganisha/sbt-shuwari")),
     version := versionSetting.value,
     dynver := versionSetting.toTaskable.toTask.value,
     scmInfo := Some(

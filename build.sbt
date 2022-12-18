@@ -92,7 +92,7 @@ def publishSettings = List(
   credentials := List(
     Credentials(
       "",
-      "https://s01.oss.sonatype.org/",
+      "s01.oss.sonatype.org",
       System.getenv("PUBLISH_USER"),
       System.getenv("PUBLISH_USER_PASSPHRASE")
     )

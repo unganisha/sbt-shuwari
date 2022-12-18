@@ -30,7 +30,7 @@ lazy val `sbt-shuwari-header` =
     .in(modules("header"))
     .enablePlugins(SbtPlugin, SignedAetherPlugin)
     .dependsOn(`sbt-shuwari-mode`)
-    .settings(addSbtPlugin("de.heikoseeberger" % "sbt-header" % "5.6.5"))
+    .settings(addSbtPlugin("de.heikoseeberger" % "sbt-header" % "5.9.0"))
     .settings(publishSettings)
 
 lazy val `sbt-shuwari-scalac` =

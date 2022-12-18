@@ -6,8 +6,8 @@ inThisBuild(
       "Apache-2.0" -> url("https://www.apache.org/licenses/LICENSE-2.0")
     ),
     description := "Collection of sbt plugins for easy initialisation of uniform organisation wide default project settings.",
-    version := defaultVersionSetting.value,
-    dynver := defaultVersionSetting.toTaskable.toTask.value,
+    version := versionSetting.value,
+    dynver := versionSetting.toTaskable.toTask.value,
     scmInfo := Some(
       ScmInfo(
         url("https://github.com/unganisha/sbt-shuwari"),
@@ -85,7 +85,7 @@ def publishSettings = List(
     "Specification-Version" -> version.value,
     "Specification-Vendor" -> organizationName.value,
     "Implementation-Title" -> name.value,
-    "Implementation-Version" -> version.value,
+    "Implementation-Version" -> implementationVersionSetting.value,
     "Implementation-Vendor-Id" -> organization.value,
     "Implementation-Vendor" -> organizationName.value
   ),
@@ -122,27 +122,32 @@ def pgpSettings = List(
 )
 
 def aetherSettings = List(
-  aether.AetherKeys.aetherDeploy / version :=
-    version.value
-      .split("\\+")
-      .head
+  aether.AetherKeys.aetherDeploy / version := (ThisProject / version).value
 )
 
-def defaultVersionSetting = {
-  def versionFormatter(in: sbtdynver.GitDescribeOutput): String =
+def baseVersionSetting(appendMetadata: Boolean): Def.Initialize[String] = {
+  def baseVersionFormatter(in: sbtdynver.GitDescribeOutput) = {
+    def meta =
+      if (appendMetadata) s"+${in.commitSuffix.distance}.${in.commitSuffix.sha}"
+      else ""
+
     if (!in.isSnapshot()) in.ref.dropPrefix
     else {
       val parts = {
         def current = in.ref.dropPrefix.split("\\.").map(_.toInt)
         current.updated(current.length - 1, current.last + 1)
       }
-      s"${parts.mkString(".")}-SNAPSHOT+${in.commitSuffix.distance}.${in.commitSuffix.sha}"
+      s"${parts.mkString(".")}-SNAPSHOT$meta"
     }
-
+  }
   Def.setting(
     dynverGitDescribeOutput.value.mkVersion(
-      versionFormatter,
+      baseVersionFormatter,
       "SNAPHOT"
     )
   )
 }
+
+def versionSetting = baseVersionSetting(appendMetadata = false)
+
+def implementationVersionSetting = baseVersionSetting(appendMetadata = true)

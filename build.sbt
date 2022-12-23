@@ -58,6 +58,19 @@ lazy val `sbt-shuwari` =
     .enablePlugins(SbtPlugin, SignedAetherPlugin)
     .settings(publishSettings)
 
+lazy val `sbt-shuwari-documentation` =
+   project
+     .in(file(".mdoc"))
+     .dependsOn(`sbt-shuwari`)
+     .enablePlugins(MdocPlugin)
+     .settings(
+      mdocIn := (LocalRootProject / baseDirectory).value / "modules" / "documentation",
+      mdocOut := (LocalRootProject / baseDirectory).value,
+      mdocVariables := Map(
+        "VERSION" -> version.value
+      )
+     )
+
 lazy val `sbt-shuwari-build-root` =
   project
     .in(file("."))

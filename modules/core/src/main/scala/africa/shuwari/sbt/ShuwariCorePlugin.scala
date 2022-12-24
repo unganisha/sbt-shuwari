@@ -23,9 +23,33 @@ object ShuwariCorePlugin extends AutoPlugin {
   object autoImport {
 
     implicit def projectToProjectOps(p: Project): ProjectOps = ProjectOps(p)
+    implicit def optsToOptsOps(o: Opts.type): OptsOps = OptsOps(o)
 
     def shuwariProject: List[Setting[_]] = defaultOrganisationSettings
     def notPublished: List[Setting[_]] = projectNotPublished
+
+  }
+
+  final case class OptsOps(o: Opts.type) {
+    object scm {
+      def github(owner: String, repository: String) = {
+        def browseUrl = s"https://github.com/$owner/$repository"
+        Some(
+          ScmInfo(
+            url(browseUrl),
+            s"scm:git:$browseUrl.git",
+            Some(s"scm:git:git@github.com:$owner/$repository.git")
+          )
+        )
+      }
+
+      def azure(owner: String, project: String, repository: String) = Some(
+        ScmInfo(
+          url(s"https://dev.azure.com/$owner/$project/_git/$repository"),
+          s"scm:git:https://$owner@dev.azure.com/$owner/$project/_git/$repository"
+        )
+      )
+    }
 
   }
 

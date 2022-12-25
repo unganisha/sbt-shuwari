@@ -11,6 +11,8 @@ Any issues may be reported to the project [issue tracker](https://dev.azure.com/
 [![Board Status](https://dev.azure.com/shuwari/79d8b623-e785-4397-8c14-0a0b3645f461/eaa58a91-e40a-46a5-b8f7-cfa30dbece27/_apis/work/boardbadge/bc91e17a-5d52-4d3a-aec3-e9a2678b1a10?columnOptions=1)](https://dev.azure.com/shuwari/79d8b623-e785-4397-8c14-0a0b3645f461/_boards/board/t/eaa58a91-e40a-46a5-b8f7-cfa30dbece27/Microsoft.RequirementCategory/)
 __________________________________
 
+_NB: Unless specified otherwise, all plugins listed below are sbt `AutoPlugins`, and will be enabled automatically upon enabling the required plugin dependencies for each._
+
 ## Core Plugins
 
 All core plugins listed below may be included in the project separately, or otherwise collectively using the following coordinates:
@@ -19,7 +21,10 @@ All core plugins listed below may be included in the project separately, or othe
 addSbtPlugin("africa.shuwari.sbt", "sbt-shuwari", "@VERSION@")
 ```
 
-For individual plugin dependency coordinates, see below:
+|Includes| [ShuwariCorePlugin](#shuwaricoreplugin), [ShuwariHeaderPlugin](#shuwariheaderplugin), [BuildModePlugin](#buildmodeplugin), [ScalacOptionsPlugin](#scalacoptionsplugin)|
+|--------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+
+**For individual plugin dependency coordinates, see below:**
 
 ### [ShuwariCorePlugin](modules/core/src/main/scala/africa/shuwari/sbt/ShuwariCorePlugin.scala)
 
@@ -27,7 +32,7 @@ Preconfigures projects with Shuwari Africa Ltd. project defaults.
   
 Specifically, sets `ThisBuild / crossScalaVersions`, `ThisBuild / organizationHomepage`, `ThisBuild / organizationName`, `ThisBuild / scalaVersion`,
 and `ThisBuild / scmInfo` to the values specified for the root project by default. For example, setting `scalaVersion`
-will also set the same value for `ThisBuild / scalaVersion`. *Note: No longer resolves circular dependencies caused by existing sbt defaults. the following*
+will also set the same value for `ThisBuild / scalaVersion`. _Note: No longer resolves circular dependencies caused by existing sbt defaults. the following_
 *settings must be set explicitly for the root project to avoid errors during project launch: `organizationHomepage`, `organizationName`, `scalaVersion`*
 
 Additionally, sets `organizationName`, `organizationHomepage`, `organization`, `apiURL`, `developers`, `homepage`, `licenses`, `startYear`, and `version`
@@ -111,6 +116,12 @@ addSbtPlugin("africa.shuwari.sbt", "sbt-shuwari-mode", "@VERSION@")
 Provides a set of default scalac compiler options based on the active  `buildMode`. Uses the excellent [sbt-tpolecat](https://github.com/typelevel/sbt-tpolecat)
 under the hood.
 
+|Depends On:                                                                                   |
+| -------------------------------------------------------------------------------------------- |
+|[BuildModePlugin](#buildmodeplugin), [sbt-tpolecat](https://github.com/typelevel/sbt-tpolecat)|
+
+Introduces one new setting, `basePackage`, defining the package under which files to be optimised under production mode compilation are contained.
+
 Introduces 3 new tasks, `developmentBuildOptions`, `integrationBuildOptions`, and `releaseBuildOptions` speficying a Set[ScalacOption] to be applied dependent
 on the corresponding `buildMode`.
 
@@ -119,6 +130,21 @@ Additional options can be appended to one of the above tasks, for example:
 ```scala
 developmentBuildOptions := developmentBuildOpions.value ++ ScalacOptions.languageExperimentalMacros
 ```
+
+## Supplementary Plugins
+
+### [ShuwariJsPlugin](modules/js/src/main/scala/africa/shuwari/ShuwariJsPlugin.scala)
+
+Provides a set of default ScalaJS linker options based on the active  `buildMode` or specified `basePackage`.
+
+|Depends On:                                                                                                                   |
+| ---------------------------------------------------------------------------------------------------------------------------- |
+| [BuildModePlugin](#buildmodeplugin), [ScalacOptionsPlugin](#scalacoptionsplugin), [ScalaJSPlugin](https://www.scala-js.org/) |
+
+- Configures project to emit [ES Modules](https://www.scala-js.org/doc/project/module.html) by default.
+- If `basePackage` is configures, configures module [split style](https://www.scala-js.org/api/scalajs-linker-interface-js/latest/org/scalajs/linker/interface/ModuleSplitStyle$.html)
+  to produce the [smallest modules](https://www.scala-js.org/api/scalajs-linker-interface-js/latest/org/scalajs/linker/interface/ModuleSplitStyle$$SmallModulesFor.html)
+  for the specified package, and subpackages. Otherwise uses [`FewestModules`](https://www.scala-js.org/api/scalajs-linker-interface-js/latest/org/scalajs/linker/interface/ModuleSplitStyle$$FewestModules$.html) for when `BuildMode` is set to `BuildMode.Development`, and [`SmallestModules`](https://www.scala-js.org/api/scalajs-linker-interface-js/latest/org/scalajs/linker/interface/ModuleSplitStyle$$SmallestModules$.html) otherwise.
 
 __________________________________
 

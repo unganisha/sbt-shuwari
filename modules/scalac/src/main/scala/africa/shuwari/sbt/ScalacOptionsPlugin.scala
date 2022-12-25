@@ -7,6 +7,7 @@ import _root_.io.github.davidgregory084.ScalaVersion
 import _root_.io.github.davidgregory084.ScalacOption
 import _root_.io.github.davidgregory084.ScalacOptions
 import _root_.io.github.davidgregory084.TpolecatPlugin
+import _root_.io.github.davidgregory084.{ReleaseMode => TpolecatRelease}
 import _root_.io.github.davidgregory084.TpolecatPlugin.{autoImport => tp}
 import africa.shuwari.sbt.BuildModePlugin.DevelopmentBuild
 import africa.shuwari.sbt.BuildModePlugin.IntegrationBuild
@@ -69,7 +70,7 @@ object ScalaCompileOptionsPlugin extends AutoPlugin {
 
     def dottyMaxInlines = options.advancedOption("max-inlines:64", dottyOnly)
 
-    def developmentOptions =
+    def developmentOptions = Def.task(
       options.default
         .and(options.fatalWarningOptions)
         .and(dottyExplain)
@@ -79,20 +80,20 @@ object ScalaCompileOptionsPlugin extends AutoPlugin {
         .and(dottyMaxInlines)
         .and(dottyRequireTargetName)
         .except(options.languageImplicitConversions)
-
+)
     def integrationBuildOptions =
       releaseBuildOptions.map(_.and(options.optimizerWarnings))
 
     def releaseBuildOptions = Def.task {
 
       def sources =
-        (Compile / Keys.sources).value
+        (Compile / Keys.unmanagedSources).value
           .collect { case f if f.name.endsWith(".scala") => f.getAbsolutePath }
           .mkString(":")
 
       def optimiserPattern = basePackage.value.map(_ + ".**").getOrElse(sources)
 
-      developmentOptions
+      developmentOptions.value
         .and(options.optimizerOptions(optimiserPattern))
     }
 
@@ -106,11 +107,11 @@ object ScalaCompileOptionsPlugin extends AutoPlugin {
     }
   }
 
-  def optionsModeResolver = Def.setting {
+  def optionsModeResolver: Def.Initialize[OptionsMode] = Def.setting {
     BuildModePlugin.buildMode.value match {
-      case DevelopmentBuild => DevMode.asInstanceOf[OptionsMode]
-      case IntegrationBuild => CiMode.asInstanceOf[OptionsMode]
-      case ReleaseBuild     => ReleaseBuild.asInstanceOf[OptionsMode]
+      case DevelopmentBuild => DevMode
+      case IntegrationBuild => CiMode
+      case ReleaseBuild     => TpolecatRelease
     }
   }
 
@@ -119,10 +120,11 @@ object ScalaCompileOptionsPlugin extends AutoPlugin {
   )
 
   override def projectSettings: Seq[Setting[_]] = List(
+    basePackage := None,
     tp.tpolecatDevModeOptions := Set(),
     tp.tpolecatCiModeOptions := Set(),
     tp.tpolecatReleaseModeOptions := Set(),
-    developmentBuildOptions := Options.developmentOptions,
+    developmentBuildOptions := Options.developmentOptions.value,
     integrationBuildOptions := Options.releaseBuildOptions.value,
     releaseBuildOptions := Options.releaseBuildOptions.value,
     Compile / Keys.scalacOptions := {

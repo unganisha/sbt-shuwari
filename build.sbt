@@ -31,7 +31,6 @@ lazy val `sbt-shuwari-header` =
   project
     .in(modules("header"))
     .enablePlugins(SbtPlugin, SignedAetherPlugin)
-    .dependsOn(`sbt-shuwari-mode`)
     .settings(addSbtPlugin("de.heikoseeberger" % "sbt-header" % "5.9.0"))
     .settings(publishSettings)
 
@@ -58,18 +57,26 @@ lazy val `sbt-shuwari` =
     .enablePlugins(SbtPlugin, SignedAetherPlugin)
     .settings(publishSettings)
 
+lazy val `sbt-shuwari-js` =
+  project
+    .in(modules("js"))
+    .enablePlugins(SbtPlugin, SignedAetherPlugin)
+    .settings(publishSettings)
+    .dependsOn(`sbt-shuwari-mode`, `sbt-shuwari-scalac`)
+    .settings(addSbtPlugin("org.scala-js" % "sbt-scalajs" % "1.12.0"))
+
 lazy val `sbt-shuwari-documentation` =
-   project
-     .in(file(".mdoc"))
-     .dependsOn(`sbt-shuwari`)
-     .enablePlugins(MdocPlugin)
-     .settings(
+  project
+    .in(file(".mdoc"))
+    .dependsOn(`sbt-shuwari`)
+    .enablePlugins(MdocPlugin)
+    .settings(
       mdocIn := (LocalRootProject / baseDirectory).value / "modules" / "documentation",
       mdocOut := (LocalRootProject / baseDirectory).value,
       mdocVariables := Map(
         "VERSION" -> version.value
       )
-     )
+    )
 
 lazy val `sbt-shuwari-build-root` =
   project
@@ -79,7 +86,8 @@ lazy val `sbt-shuwari-build-root` =
       `sbt-shuwari-header`,
       `sbt-shuwari-scalac`,
       `sbt-shuwari-core`,
-      `sbt-shuwari`
+      `sbt-shuwari`,
+      `sbt-shuwari-js`
     )
     .enablePlugins(SbtPlugin)
     .settings(aetherSettings)

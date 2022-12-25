@@ -33,7 +33,7 @@ Preconfigures projects with Shuwari Africa Ltd. project defaults.
 Specifically, sets `ThisBuild / crossScalaVersions`, `ThisBuild / organizationHomepage`, `ThisBuild / organizationName`, `ThisBuild / scalaVersion`,
 and `ThisBuild / scmInfo` to the values specified for the root project by default. For example, setting `scalaVersion`
 will also set the same value for `ThisBuild / scalaVersion`. _Note: No longer resolves circular dependencies caused by existing sbt defaults. the following_
-*settings must be set explicitly for the root project to avoid errors during project launch: `organizationHomepage`, `organizationName`, `scalaVersion`*
+_settings must be set explicitly for the root project to avoid errors during project launch: `organizationHomepage`, `organizationName`, `scalaVersion`_
 
 Additionally, sets `organizationName`, `organizationHomepage`, `organization`, `apiURL`, `developers`, `homepage`, `licenses`, `startYear`, and `version`
 for all non-root projects to the values specified in the the root project by default. For example, setting `version` for the root project will propagate

@@ -39,9 +39,9 @@ jobs:
         run: sbt package
 
   publish:
-    name: Publish Artefacts
+    name: Publish Release
     needs: [test]
-    if: github.event_name != 'pull_request' && (startsWith(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/main')
+    if: github.event_name != 'pull_request' && startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-22.04
 
     steps:
@@ -73,23 +73,6 @@ jobs:
           PUBLISH_USER_PASSPHRASE: ${{ secrets.OSS_PUBLISH_USER_PASSPHRASE }}
           SIGNING_KEY_ID: ${{ secrets.OSS_PUBLISH_USER_SIGNING_KEY_ID }}
 
-  synchronise-repositories:
-    name: Synchronise Repositories
-    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Checkout Source Code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-
-      - name: Synchronise Azure DevOps
-        uses: yesolutions/mirror-action@v0.6.0
-        with:
-          REMOTE: "https://shuwari@dev.azure.com/shuwari/sbt-shuwari/_git/sbt-shuwari"
-          GIT_USERNAME: ${{ secrets.DEVOPS_SYNC_USER }}
-          GIT_PASSWORD: ${{ secrets.DEVOPS_SYNC_USER_PASSPHRASE }}
-          PUSH_ALL_REFS: false
 
   publish-documentation:
     name: Publish Documentation
@@ -133,3 +116,22 @@ jobs:
         with:
           github_token: ${{ secrets.OSS_TEAM_TOKEN }}
           branch: main
+
+
+  synchronise-repositories:
+    name: Synchronise Repositories
+    if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v'))
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Synchronise Azure DevOps
+        uses: yesolutions/mirror-action@v0.6.0
+        with:
+          REMOTE: "https://shuwari@dev.azure.com/shuwari/sbt-shuwari/_git/sbt-shuwari"
+          GIT_USERNAME: ${{ secrets.DEVOPS_SYNC_USER }}
+          GIT_PASSWORD: ${{ secrets.DEVOPS_SYNC_USER_PASSPHRASE }}
+          PUSH_ALL_REFS: false

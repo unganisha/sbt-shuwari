@@ -21,8 +21,9 @@ All core plugins listed below may be included in the project separately, or othe
 addSbtPlugin("africa.shuwari.sbt", "sbt-shuwari", "@VERSION@")
 ```
 
-|Includes| [ShuwariCorePlugin](#shuwaricoreplugin), [ShuwariHeaderPlugin](#shuwariheaderplugin), [BuildModePlugin](#buildmodeplugin), [ScalacOptionsPlugin](#scalacoptionsplugin)|
-|--------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|Includes:                                                                                                                                                             |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|[ShuwariCorePlugin](#shuwaricoreplugin), [ShuwariHeaderPlugin](#shuwariheaderplugin), [BuildModePlugin](#buildmodeplugin), [ScalacOptionsPlugin](#scalacoptionsplugin)|
 
 **For individual plugin dependency coordinates, see below:**
 
@@ -94,16 +95,16 @@ lazy val `amazing-project` =
 ### [BuildModePlugin](modules/mode/src/main/scala/africa/shuwari/sbt/BuildModePlugin.scala)
 
 Provides a build scoped `buildMode` sbt `SettingKey` allowing the specification of separate settings dependent on
-current build environment; specifically one of `DevelopmentBuild`, `IntegrationBuild`, or `DeploymentBuild`.
+current build environment; specifically one of `Mode.Development`, `Mode.Integration`, or `Mode.Release`.
 
 `buildMode` can be configured by being set explicitly, for example in your `build.sbt` file:
 
 ```scala
-ThisBuild / buildMode := IntegrationBuild
+ThisBuild / buildMode := Mode.Integration
 ```
 
 Alternatively, the environment variable `BUILD_MODE` may be used with one of the following values to select the respective
-modes: `DEVELOPMENT`, `INTEGRATION`, or `DEPLOYMENT`.
+modes: `DEVELOPMENT`, `INTEGRATION`, or `RELEASE`.
 
 It may be resolved via the following coordinates:
 

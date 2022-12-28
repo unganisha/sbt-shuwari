@@ -1,24 +1,15 @@
 package africa.shuwari.sbt
 
-import _root_.io.github.davidgregory084.CiMode
-import _root_.io.github.davidgregory084.DevMode
-import _root_.io.github.davidgregory084.OptionsMode
-import _root_.io.github.davidgregory084.ScalaVersion
-import _root_.io.github.davidgregory084.ScalacOption
-import _root_.io.github.davidgregory084.ScalacOptions
-import _root_.io.github.davidgregory084.TpolecatPlugin
-import _root_.io.github.davidgregory084.{ReleaseMode => TpolecatRelease}
 import _root_.io.github.davidgregory084.TpolecatPlugin.{autoImport => tp}
-import africa.shuwari.sbt.BuildModePlugin.DevelopmentBuild
-import africa.shuwari.sbt.BuildModePlugin.IntegrationBuild
-import africa.shuwari.sbt.BuildModePlugin.ReleaseBuild
+import _root_.io.github.davidgregory084.*
+import org.checkerframework.checker.nullness.Opt
 import sbt.{ScalaVersion => _, _}
 
 import scala.Ordering.Implicits._
 import scala.collection.GenTraversableOnce
-import org.checkerframework.checker.nullness.Opt
-
 import scala.language.implicitConversions
+
+import BuildModePlugin.Mode
 
 object ScalaCompileOptionsPlugin extends AutoPlugin {
 
@@ -101,17 +92,17 @@ object ScalaCompileOptionsPlugin extends AutoPlugin {
 
   def optionsResolver = Def.task {
     BuildModePlugin.buildMode.value match {
-      case DevelopmentBuild => developmentBuildOptions.value
-      case IntegrationBuild => integrationBuildOptions.value
-      case ReleaseBuild     => releaseBuildOptions.value
+      case Mode.Development => developmentBuildOptions.value
+      case Mode.Integration => integrationBuildOptions.value
+      case Mode.Release     => releaseBuildOptions.value
     }
   }
 
   def optionsModeResolver: Def.Initialize[OptionsMode] = Def.setting {
     BuildModePlugin.buildMode.value match {
-      case DevelopmentBuild => DevMode
-      case IntegrationBuild => CiMode
-      case ReleaseBuild     => TpolecatRelease
+      case Mode.Development => DevMode
+      case Mode.Integration => CiMode
+      case Mode.Release     => ReleaseMode
     }
   }
 
@@ -129,18 +120,16 @@ object ScalaCompileOptionsPlugin extends AutoPlugin {
     releaseBuildOptions := Options.releaseBuildOptions.value,
     Compile / Keys.scalacOptions := {
       BuildModePlugin.buildMode.value match {
-        case DevelopmentBuild =>
+        case Mode.Development =>
           developmentBuildOptions.value.map(_.toString).toList
-        case IntegrationBuild =>
+        case Mode.Integration =>
           integrationBuildOptions.value.map(_.toString).toList
-        case ReleaseBuild => releaseBuildOptions.value.map(_.toString).toList
+        case Mode.Release => releaseBuildOptions.value.map(_.toString).toList
       }
     },
-    Test / Keys.scalacOptions := {
-      BuildModePlugin.buildMode.value match {
-        case _ => developmentBuildOptions.value.map(_.toString).toList
-      }
-    }
+    Test / Keys.scalacOptions := developmentBuildOptions.value.map(_.toString).toList
+      
+    
   )
 
   override def requires: Plugins = BuildModePlugin && TpolecatPlugin

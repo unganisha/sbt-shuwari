@@ -5,16 +5,15 @@ import sbt.plugins.JvmPlugin
 
 object BuildModePlugin extends AutoPlugin {
 
-  sealed trait BuildMode extends Product with Serializable
-  case object DevelopmentBuild extends BuildMode
-  case object IntegrationBuild extends BuildMode
-  case object ReleaseBuild extends BuildMode
+  sealed trait Mode extends Product with Serializable
+  object Mode {
+    case object Development extends Mode
+    case object Integration extends Mode
+    case object Release extends Mode
+  }
 
   object autoImport {
-    def DevelopmentBuild = BuildModePlugin.DevelopmentBuild
-    def IntegrationBuild = BuildModePlugin.IntegrationBuild
-    def ReleaseBuild = BuildModePlugin.ReleaseBuild
-
+    def Mode = BuildModePlugin.Mode
     def buildMode = BuildModePlugin.buildMode
   }
 
@@ -25,7 +24,7 @@ object BuildModePlugin extends AutoPlugin {
     buildMode := buildModeResolver.value
   )
 
-  val buildMode = settingKey[BuildMode](
+  val buildMode = settingKey[Mode](
     "Defines the current BuildMode. Defaults to DevelopmentBuild unless 'profile' property is detected and set to 'deployment'."
   )
 
@@ -33,16 +32,14 @@ object BuildModePlugin extends AutoPlugin {
 
     def environmentSetting = "BUILD_MODE"
 
-    def modeIdentifier(mode: BuildMode): String = {
+    def modeIdentifier(mode: Mode): String = {
       mode.getClass.getSimpleName
         .dropWhile(_ == '$')
-        .split("""(?<!^)(?=[A-Z])""")
-        .head
         .toLowerCase
     }
 
-    val modes: Map[String, BuildMode] =
-      Set(DevelopmentBuild, IntegrationBuild, ReleaseBuild)
+    val modes: Map[String, Mode] =
+      Set(Mode.Development, Mode.Integration, Mode.Release)
         .map(mode => modeIdentifier(mode) -> mode)
         .toMap
 
@@ -62,7 +59,7 @@ object BuildModePlugin extends AutoPlugin {
       .get(environmentSetting)
       .filter(validIdentifier) match {
       case Some(id) => modes.get(id).get
-      case _        => DevelopmentBuild
+      case _        => Mode.Development
     }
   }
 

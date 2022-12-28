@@ -33,7 +33,7 @@ object ShuwariJsPlugin extends AutoPlugin {
         ModuleSplitStyle.SmallModulesFor(List(p))
       )
     def defaultSplit = if (
-      BuildModePlugin.buildMode.value == BuildModePlugin.DevelopmentBuild
+      BuildModePlugin.buildMode.value == BuildModePlugin.Mode.Development
     ) ModuleSplitStyle.FewestModules
     else ModuleSplitStyle.SmallestModules
 

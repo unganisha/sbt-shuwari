@@ -18,11 +18,12 @@ _NB: Unless specified otherwise, all plugins listed below are sbt `AutoPlugins`,
 All core plugins listed below may be included in the project separately, or otherwise collectively using the following coordinates:
 
 ```scala
-addSbtPlugin("africa.shuwari.sbt", "sbt-shuwari", "0.5.0")
+addSbtPlugin("africa.shuwari.sbt", "sbt-shuwari", "0.6.0")
 ```
 
-|Includes| [ShuwariCorePlugin](#shuwaricoreplugin), [ShuwariHeaderPlugin](#shuwariheaderplugin), [BuildModePlugin](#buildmodeplugin), [ScalacOptionsPlugin](#scalacoptionsplugin)|
-|--------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|Includes:                                                                                                                                                             |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|[ShuwariCorePlugin](#shuwaricoreplugin), [ShuwariHeaderPlugin](#shuwariheaderplugin), [BuildModePlugin](#buildmodeplugin), [ScalacOptionsPlugin](#scalacoptionsplugin)|
 
 **For individual plugin dependency coordinates, see below:**
 
@@ -57,7 +58,7 @@ lazy val `amazing-project` =
 It may be resolved via the following coordinates:
 
 ```scala
-addSbtPlugin("africa.shuwari.sbt", "sbt-shuwari-core", "0.5.0")
+addSbtPlugin("africa.shuwari.sbt", "sbt-shuwari-core", "0.6.0")
 ```
 
 ### [ShuwariHeaderPlugin](modules/header/src/main/scala/africa/shuwari/sbt/ShuwariHeaderPlugin.scala)
@@ -72,7 +73,7 @@ member, denoting the Apache 2.0 License, then the default Apache 2.0 License hea
 It may be resolved via the following coordinates:
 
 ```scala
-addSbtPlugin("africa.shuwari.sbt", "sbt-shuwari-header", "0.5.0")
+addSbtPlugin("africa.shuwari.sbt", "sbt-shuwari-header", "0.6.0")
 ```
 
 Additionally, a project's license may be specified explicitly by including either `internalSoftware`, or `apacheLicensed`
@@ -94,21 +95,21 @@ lazy val `amazing-project` =
 ### [BuildModePlugin](modules/mode/src/main/scala/africa/shuwari/sbt/BuildModePlugin.scala)
 
 Provides a build scoped `buildMode` sbt `SettingKey` allowing the specification of separate settings dependent on
-current build environment; specifically one of `DevelopmentBuild`, `IntegrationBuild`, or `DeploymentBuild`.
+current build environment; specifically one of `Mode.Development`, `Mode.Integration`, or `Mode.Release`.
 
 `buildMode` can be configured by being set explicitly, for example in your `build.sbt` file:
 
 ```scala
-ThisBuild / buildMode := IntegrationBuild
+ThisBuild / buildMode := Mode.Integration
 ```
 
 Alternatively, the environment variable `BUILD_MODE` may be used with one of the following values to select the respective
-modes: `DEVELOPMENT`, `INTEGRATION`, or `DEPLOYMENT`.
+modes: `DEVELOPMENT`, `INTEGRATION`, or `RELEASE`.
 
 It may be resolved via the following coordinates:
 
 ```scala
-addSbtPlugin("africa.shuwari.sbt", "sbt-shuwari-mode", "0.5.0")
+addSbtPlugin("africa.shuwari.sbt", "sbt-shuwari-mode", "0.6.0")
 ```
 
 ### [ScalacOptionsPlugin](modules/scalac/src/main/scala/africa/shuwari/sbt/ScalacOptionsPlugin.scala)

@@ -25,7 +25,8 @@ object BuildModePlugin extends AutoPlugin {
   )
 
   val buildMode = settingKey[Mode](
-    "Defines the current BuildMode. Defaults to DevelopmentBuild unless 'profile' property is detected and set to 'deployment'."
+    "Defines the current BuildMode. Defaults to Mode.Development unless \"BUILD_MODE\" environment variable is detected " +
+    "and set to either \"DEVELOPMENT\", \"INTEGRATION\", or \"RELEASE\"."
   )
 
   private def buildModeResolver = Def.setting {

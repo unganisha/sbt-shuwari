@@ -18,7 +18,8 @@ inThisBuild(
     ),
     scalacOptions ++= List("-feature", "-deprecation"),
     startYear := Some(2022),
-    sonatypeCredentialHost := "s01.oss.sonatype.org"
+    sonatypeCredentialHost := "s01.oss.sonatype.org",
+    publishCredentials
   )
 )
 
@@ -99,7 +100,16 @@ lazy val `sbt-shuwari-build-root` =
 
 def modules(name: String) = file(s"./modules/$name")
 
-def publishSettings = List(
+def publishCredentials = credentials := List(
+  Credentials(
+    "Sonatype Nexus Repository Manager",
+    sonatypeCredentialHost.value,
+    System.getenv("PUBLISH_USER"),
+    System.getenv("PUBLISH_USER_PASSPHRASE")
+  )
+)
+
+def publishSettings = publishCredentials +: pgpSettings ++:  List(
   packageOptions += Package.ManifestAttributes(
     "Created-By" -> "Simple Build Tool",
     "Built-By" -> System.getProperty("user.name"),
@@ -112,14 +122,6 @@ def publishSettings = List(
     "Implementation-Vendor-Id" -> organization.value,
     "Implementation-Vendor" -> organizationName.value
   ),
-  credentials := List(
-    Credentials(
-      "Sonatype Nexus Repository Manager",
-      "s01.oss.sonatype.org",
-      System.getenv("PUBLISH_USER"),
-      System.getenv("PUBLISH_USER_PASSPHRASE")
-    )
-  ),
   publishTo := sonatypePublishToBundle.value,
   developers := List(
     Developer(
@@ -131,7 +133,7 @@ def publishSettings = List(
   ),
   pomIncludeRepository := (_ => false),
   publishMavenStyle := true
-) ++ pgpSettings
+)
 
 def pgpSettings = List(
   PgpKeys.pgpSelectPassphrase :=

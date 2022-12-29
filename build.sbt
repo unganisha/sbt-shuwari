@@ -17,27 +17,28 @@ inThisBuild(
       )
     ),
     scalacOptions ++= List("-feature", "-deprecation"),
-    startYear := Some(2022)
+    startYear := Some(2022),
+    sonatypeCredentialHost := "s01.oss.sonatype.org"
   )
 )
 
 lazy val `sbt-shuwari-mode` =
   project
     .in(modules("mode"))
-    .enablePlugins(SbtPlugin, SignedAetherPlugin)
+    .enablePlugins(SbtPlugin)
     .settings(publishSettings)
 
 lazy val `sbt-shuwari-header` =
   project
     .in(modules("header"))
-    .enablePlugins(SbtPlugin, SignedAetherPlugin)
+    .enablePlugins(SbtPlugin)
     .settings(addSbtPlugin("de.heikoseeberger" % "sbt-header" % "5.9.0"))
     .settings(publishSettings)
 
 lazy val `sbt-shuwari-scalac` =
   project
     .in(modules("scalac"))
-    .enablePlugins(SbtPlugin, SignedAetherPlugin)
+    .enablePlugins(SbtPlugin)
     .dependsOn(`sbt-shuwari-mode`)
     .settings(
       addSbtPlugin("io.github.davidgregory084" % "sbt-tpolecat" % "0.4.1")
@@ -47,20 +48,20 @@ lazy val `sbt-shuwari-scalac` =
 lazy val `sbt-shuwari-core` =
   project
     .in(modules("core"))
-    .enablePlugins(SbtPlugin, SignedAetherPlugin)
+    .enablePlugins(SbtPlugin)
     .settings(publishSettings)
 
 lazy val `sbt-shuwari` =
   project
     .in(file(".sbt-shuwari"))
     .dependsOn(`sbt-shuwari-core`, `sbt-shuwari-scalac`, `sbt-shuwari-header`)
-    .enablePlugins(SbtPlugin, SignedAetherPlugin)
+    .enablePlugins(SbtPlugin)
     .settings(publishSettings)
 
 lazy val `sbt-shuwari-js` =
   project
     .in(modules("js"))
-    .enablePlugins(SbtPlugin, SignedAetherPlugin)
+    .enablePlugins(SbtPlugin)
     .settings(publishSettings)
     .dependsOn(`sbt-shuwari-mode`, `sbt-shuwari-scalac`)
     .settings(addSbtPlugin("org.scala-js" % "sbt-scalajs" % "1.12.0"))
@@ -90,11 +91,10 @@ lazy val `sbt-shuwari-build-root` =
       `sbt-shuwari-js`
     )
     .enablePlugins(SbtPlugin)
-    .settings(aetherSettings)
     .settings(
       publish := {},
       publish / skip := true,
-      aether.AetherKeys.aetherDeploy := {}
+      sonatypeProfileName := "africa.shuwari"
     )
 
 def modules(name: String) = file(s"./modules/$name")
@@ -114,17 +114,13 @@ def publishSettings = List(
   ),
   credentials := List(
     Credentials(
-      "",
+      "Sonatype Nexus Repository Manager",
       "s01.oss.sonatype.org",
       System.getenv("PUBLISH_USER"),
       System.getenv("PUBLISH_USER_PASSPHRASE")
     )
   ),
-  publishTo := Some("OSSRH" at {
-    if (isSnapshot.value)
-      "https://s01.oss.sonatype.org/content/repositories/snapshots"
-    else "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2"
-  }),
+  publishTo := sonatypePublishToBundle.value,
   developers := List(
     Developer(
       id = "shuwaridev",
@@ -133,8 +129,9 @@ def publishSettings = List(
       url = url("https://shuwari.com/dev")
     )
   ),
-  pomIncludeRepository := (_ => false)
-) ++ pgpSettings ++ aetherSettings
+  pomIncludeRepository := (_ => false),
+  publishMavenStyle := true
+) ++ pgpSettings
 
 def pgpSettings = List(
   PgpKeys.pgpSelectPassphrase :=
@@ -142,10 +139,6 @@ def pgpSettings = List(
       .get("SIGNING_KEY_PASSPHRASE")
       .map(_.toCharArray),
   usePgpKeyHex(System.getenv("SIGNING_KEY_ID"))
-)
-
-def aetherSettings = List(
-  aether.AetherKeys.aetherDeploy / version := (ThisProject / version).value
 )
 
 def baseVersionSetting(appendMetadata: Boolean): Def.Initialize[String] = {

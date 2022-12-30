@@ -42,8 +42,7 @@ object ScalaCompileOptionsPlugin extends AutoPlugin {
 
     def options = tp.ScalacOptions
 
-    def dottyOnly(v: ScalaVersion) =
-      v.isBetween(ScalaVersion(3, 0, 0), ScalaVersion(4, 0, 0))
+    def dottyOnly(v: ScalaVersion) = v.major == 3L
 
     def V213Only(v: ScalaVersion) =
       v.isBetween(ScalaVersion(2, 13, 8), ScalaVersion(3, 0, 0))
@@ -61,7 +60,7 @@ object ScalaCompileOptionsPlugin extends AutoPlugin {
 
     def dottyMaxInlines = options.advancedOption("max-inlines:64", dottyOnly)
 
-    def developmentOptions = Def.task(
+    def developmentBuild = Def.task(
       options.default
         .and(options.fatalWarningOptions)
         .and(dottyExplain)
@@ -71,20 +70,18 @@ object ScalaCompileOptionsPlugin extends AutoPlugin {
         .and(dottyMaxInlines)
         .and(dottyRequireTargetName)
         .except(options.languageImplicitConversions)
-)
-    def integrationBuildOptions =
+    )
+
+    def integrationBuild =
       releaseBuildOptions.map(_.and(options.optimizerWarnings))
 
-    def releaseBuildOptions = Def.task {
-
+    def releaseBuild = Def.task {
       def sources =
         (Compile / Keys.unmanagedSources).value
           .collect { case f if f.name.endsWith(".scala") => f.getAbsolutePath }
           .mkString(":")
-
       def optimiserPattern = basePackage.value.map(_ + ".**").getOrElse(sources)
-
-      developmentOptions.value
+      developmentBuildOptions.value
         .and(options.optimizerOptions(optimiserPattern))
     }
 
@@ -115,23 +112,26 @@ object ScalaCompileOptionsPlugin extends AutoPlugin {
     tp.tpolecatDevModeOptions := Set(),
     tp.tpolecatCiModeOptions := Set(),
     tp.tpolecatReleaseModeOptions := Set(),
-    developmentBuildOptions := Options.developmentOptions.value,
-    integrationBuildOptions := Options.releaseBuildOptions.value,
-    releaseBuildOptions := Options.releaseBuildOptions.value,
+    developmentBuildOptions := Options.developmentBuild.value,
+    integrationBuildOptions := Options.integrationBuild.value,
+    releaseBuildOptions := Options.releaseBuild.value,
     Compile / Keys.scalacOptions := {
-      BuildModePlugin.buildMode.value match {
+      val options = BuildModePlugin.buildMode.value match {
         case Mode.Development =>
-          developmentBuildOptions.value.map(_.toString).toList
+          developmentBuildOptions.value
         case Mode.Integration =>
-          integrationBuildOptions.value.map(_.toString).toList
-        case Mode.Release => releaseBuildOptions.value.map(_.toString).toList
+          integrationBuildOptions.value
+        case Mode.Release => releaseBuildOptions.value
       }
+      tp.scalacOptionsFor(Keys.scalaVersion.value, options)
     },
-    Test / Keys.scalacOptions := developmentBuildOptions.value.map(_.toString).toList
-      
-    
+    Test / Keys.scalacOptions := tp.scalacOptionsFor(
+      Keys.version.value,
+      developmentBuildOptions.value
+    )
   )
 
   override def requires: Plugins = BuildModePlugin && TpolecatPlugin
+  override def trigger: PluginTrigger = allRequirements
 
 }

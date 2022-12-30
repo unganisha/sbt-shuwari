@@ -16,6 +16,8 @@ object ShuwariJsPlugin extends AutoPlugin {
 
   override def requires: Plugins = ScalaJSPlugin && ScalaCompileOptionsPlugin
 
+  override def trigger: PluginTrigger = allRequirements
+
   def scalaJsDottyOption =
     ScalacOption("-scalajs", ScalaCompileOptionsPlugin.Options.dottyOnly)
 

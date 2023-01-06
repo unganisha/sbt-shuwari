@@ -42,7 +42,7 @@ lazy val `sbt-shuwari-scalac` =
     .enablePlugins(SbtPlugin)
     .dependsOn(`sbt-shuwari-mode`)
     .settings(
-      addSbtPlugin("io.github.davidgregory084" % "sbt-tpolecat" % "0.4.1")
+      addSbtPlugin("io.github.davidgregory084" % "sbt-tpolecat" % "0.4.2")
     )
     .settings(publishSettings)
 
@@ -109,7 +109,7 @@ def publishCredentials = credentials := List(
   )
 )
 
-def publishSettings = publishCredentials +: pgpSettings ++:  List(
+def publishSettings = publishCredentials +: pgpSettings ++: List(
   packageOptions += Package.ManifestAttributes(
     "Created-By" -> "Simple Build Tool",
     "Built-By" -> System.getProperty("user.name"),

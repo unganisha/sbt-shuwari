@@ -4,14 +4,17 @@ import de.heikoseeberger.sbtheader.CommentBlockCreator
 import de.heikoseeberger.sbtheader.CommentCreator
 import de.heikoseeberger.sbtheader.CommentStyle
 import de.heikoseeberger.sbtheader.HeaderPlugin
-import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.*
-import sbt.Keys.*
-import sbt.*
+import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport._
+import sbt.Keys._
+import sbt._
 import sbt.plugins.JvmPlugin
 
 import scala.language.implicitConversions
 
-import HeaderPlugin.autoImport.{HeaderLicense, headerLicense}
+import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.{
+  HeaderLicense,
+  headerLicense
+}
 
 object ShuwariHeaderPlugin extends AutoPlugin {
 
@@ -59,13 +62,12 @@ object ShuwariHeaderPlugin extends AutoPlugin {
 
       val indent = padding(indentSize)
 
-      def processLines(line: String) = {
+      def processLines(line: String) =
         (line, linePrefix, lineSuffix) match {
           case (str, pre, post) =>
             def first = s"$indent$pre $str"
             s"$first${padding(maxLength - (first.size + post.size))} $post"
         }
-      }
 
       def firstLine =
         s"$commentPrefix${boundaryCharacter * (preLengthModifier + maxLength - commentPrefix.size)}"
@@ -103,7 +105,7 @@ object ShuwariHeaderPlugin extends AutoPlugin {
           case (name, _) if name.matches("(?i)apache.+2[.]0$") =>
             Headers.apacheLicenseHeader.value
         }
-        .orElse { Some(Headers.internalSoftwareHeader.value) }
+        .orElse(Some(Headers.internalSoftwareHeader.value))
     )
 
   object Headers {

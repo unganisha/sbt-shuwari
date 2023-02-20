@@ -1,7 +1,8 @@
 .bloop/
 .bsp/
+.mdoc/
 .metals/
-.sbt-shuwari/
+.sbt-shuwari*/
 .vscode/
 metals.sbt
 target/

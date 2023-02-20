@@ -42,7 +42,9 @@ lazy val `sbt-shuwari-scalac` =
     .enablePlugins(SbtPlugin)
     .dependsOn(`sbt-shuwari-mode`)
     .settings(
-      addSbtPlugin("io.github.davidgregory084" % "sbt-tpolecat" % "0.4.2")
+      libraryDependencies ++= List(
+        "org.typelevel" %% "scalac-options" % "0.1.1"
+      )
     )
     .settings(publishSettings)
 
@@ -69,7 +71,7 @@ lazy val `sbt-shuwari-js` =
 
 lazy val `sbt-shuwari-documentation` =
   project
-    .in(file(".mdoc"))
+    .in(file(".sbt-shuwari-doc"))
     .dependsOn(`sbt-shuwari`)
     .enablePlugins(MdocPlugin)
     .settings(

@@ -1,4 +1,4 @@
-package koroga.sbt
+package africa.shuwari.sbt
 
 import sbt._
 import sbt.Keys._
@@ -12,13 +12,13 @@ object ShuwariCorePlugin extends AutoPlugin {
 
   override def trigger: PluginTrigger = allRequirements
 
-  override def buildSettings: Seq[Setting[_]] =
-    baseBuildSettings ++ circularReferenceDefaults(
+  override def buildSettings: Seq[Setting[_]] = commonSettings.toList ++
+    circularReferenceDefaults(
       scmInfo -> None
     )
 
   override def projectSettings: Seq[Setting[_]] =
-    baseProjectSettings
+    commonSettings.toList
 
   object autoImport {
 
@@ -75,20 +75,21 @@ object ShuwariCorePlugin extends AutoPlugin {
         "developers at shuwari dot africa",
         url("https://shuwari.africa")
       )
-    )
+    ),
+    versionScheme := Some("semver-spec")
   )
 
   private def pomIncludeRepositorySetting = pomIncludeRepository := (_ ⇒ false)
 
-  private def baseBuildSettings = List(
-    crossScalaVersions,
+  private def commonKeys: Set[SettingKey[_]] = Set(
     organizationHomepage,
     organizationName,
-    scalaVersion
-  ).map(fromRoot(_))
+    versionScheme,
+    licenses
+  )
 
-  private def baseProjectSettings =
-    (List(
+  private def projectKeys: Set[SettingKey[_]] = commonKeys ++
+    Set(
       apiURL,
       developers,
       homepage,
@@ -96,7 +97,12 @@ object ShuwariCorePlugin extends AutoPlugin {
       organization,
       startYear,
       version
-    ).map(fromRoot(_)) :+ pomIncludeRepositorySetting) ++ baseBuildSettings
+    )
+
+  private def commonSettings = commonKeys.map(fromRoot(_))
+
+  private def baseProjectSettings =
+    projectKeys.map(fromRoot(_)) + pomIncludeRepositorySetting
 
   private def fromRoot[A](key: SettingKey[A]): Setting[A] =
     key := ((LocalRootProject / key)).value

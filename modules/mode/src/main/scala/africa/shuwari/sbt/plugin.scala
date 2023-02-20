@@ -1,6 +1,6 @@
 package africa.shuwari.sbt
 
-import sbt.*
+import sbt._
 import sbt.plugins.JvmPlugin
 
 object BuildModePlugin extends AutoPlugin {
@@ -26,18 +26,17 @@ object BuildModePlugin extends AutoPlugin {
 
   val buildMode = settingKey[Mode](
     "Defines the current BuildMode. Defaults to Mode.Development unless \"BUILD_MODE\" environment variable is detected " +
-    "and set to either \"DEVELOPMENT\", \"INTEGRATION\", or \"RELEASE\"."
+      "and set to either \"DEVELOPMENT\", \"INTEGRATION\", or \"RELEASE\"."
   )
 
   private def buildModeResolver = Def.setting {
 
     def environmentSetting = "BUILD_MODE"
 
-    def modeIdentifier(mode: Mode): String = {
+    def modeIdentifier(mode: Mode): String =
       mode.getClass.getSimpleName
         .dropWhile(_ == '$')
         .toLowerCase
-    }
 
     val modes: Map[String, Mode] =
       Set(Mode.Development, Mode.Integration, Mode.Release)

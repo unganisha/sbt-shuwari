@@ -1,37 +1,35 @@
 package africa.shuwari.sbt
 
-import io.github.davidgregory084.ScalacOption
 import org.scalajs.linker.interface.ESFeatures
 import org.scalajs.linker.interface.ModuleKind
 import org.scalajs.linker.interface.ModuleSplitStyle
 import org.scalajs.linker.interface.OutputPatterns
 import org.scalajs.linker.interface.StandardConfig
 import org.scalajs.sbtplugin.ScalaJSPlugin
-import sbt.AutoPlugin
-import sbt.Keys.*
-import sbt.Plugins
-import sbt.*
+import org.typelevel.scalacoptions.ScalacOption
+import sbt.Keys._
+import sbt._
 
-object ShuwariJsPlugin extends AutoPlugin {
+object JSPlugin extends AutoPlugin {
 
-  override def requires: Plugins = ScalaJSPlugin && ScalaCompileOptionsPlugin
+  override def requires: Plugins = ScalaJSPlugin && ScalaOptionsPlugin
 
   override def trigger: PluginTrigger = allRequirements
 
   def scalaJsDottyOption =
-    ScalacOption("-scalajs", ScalaCompileOptionsPlugin.Options.dottyOnly)
+    ScalacOption("-scalajs", ScalaCompilerOptions.dottyOnly)
 
   override def projectSettings: Seq[Def.Setting[_]] = {
     import ScalaJSPlugin.autoImport.*
     Seq(
-      ScalaCompileOptionsPlugin.developmentBuildOptions ~= (_ + scalaJsDottyOption),
+      ScalaOptionsKeys.developmentOptions ~= (_ + scalaJsDottyOption),
       scalaJSLinkerConfig := defaultLinkerConfigOptions.value
     )
   }
 
   def defaultLinkerConfigOptions = Def.setting {
     def explicitsplit =
-      ScalaCompileOptionsPlugin.basePackage.value.map(p =>
+      ScalaOptionsKeys.basePackage.value.map(p =>
         ModuleSplitStyle.SmallModulesFor(List(p))
       )
     def defaultSplit = if (

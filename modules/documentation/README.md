@@ -18,7 +18,7 @@ _NB: Unless specified otherwise, all plugins listed below are sbt `AutoPlugins`,
 All core plugins listed below may be included in the project separately, or otherwise collectively using the following coordinates:
 
 ```scala
-addSbtPlugin("africa.shuwari.sbt" %  "sbt-shuwari" % "@VERSION@")
+addSbtPlugin("africa.shuwari.sbt" % "sbt-shuwari" % "@VERSION@")
 ```
 
 |Includes:                                                                                                                                                             |
@@ -31,10 +31,8 @@ addSbtPlugin("africa.shuwari.sbt" %  "sbt-shuwari" % "@VERSION@")
 
 Preconfigures projects with Shuwari Africa Ltd. project defaults.
   
-Specifically, sets `ThisBuild / crossScalaVersions`, `ThisBuild / organizationHomepage`, `ThisBuild / organizationName`, `ThisBuild / scalaVersion`,
-and `ThisBuild / scmInfo` to the values specified for the root project by default. For example, setting `scalaVersion`
-will also set the same value for `ThisBuild / scalaVersion`. _Note: No longer resolves circular dependencies caused by existing sbt defaults. the following_
-_settings must be set explicitly for the root project to avoid errors during project launch: `organizationHomepage`, `organizationName`, `scalaVersion`_
+Specifically, sets `ThisBuild / organizationHomepage`, `ThisBuild / organizationName`, and `ThisBuild / scmInfo` to the values specified for the root
+project by default. For example, setting `scalaVersion` will also set the same value for `ThisBuild / scalaVersion`. _Note: No longer resolves circular dependencies caused by existing sbt defaults. the following settings must be set explicitly for the root project to avoid errors during project launch: `organizationHomepage`, `organizationName`_
 
 Additionally, sets `organizationName`, `organizationHomepage`, `organization`, `apiURL`, `developers`, `homepage`, `licenses`, `startYear`, and `version`
 for all non-root projects to the values specified in the the root project by default. For example, setting `version` for the root project will propagate

@@ -81,7 +81,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout Source Code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
           persist-credentials: false
@@ -131,7 +131,7 @@ jobs:
       - name: Synchronise Azure DevOps
         uses: yesolutions/mirror-action@v0.6.0
         with:
-          REMOTE: "https://shuwari@dev.azure.com/shuwari/sbt-shuwari/_git/sbt-shuwari"
-          GIT_USERNAME: ${{ secrets.DEVOPS_SYNC_USER }}
-          GIT_PASSWORD: ${{ secrets.DEVOPS_SYNC_USER_PASSPHRASE }}
+          REMOTE: "git@ssh.dev.azure.com:v3/shuwari/sbt-shuwari/sbt-shuwari"
+          GIT_SSH_PRIVATE_KEY: ${{ secrets.DEVOPS_SSH_PRIVATE_KEY }}
+          GIT_SSH_NO_VERIFY_HOST: "true"
           PUSH_ALL_REFS: false

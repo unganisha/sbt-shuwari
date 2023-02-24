@@ -18,7 +18,7 @@ _NB: Unless specified otherwise, all plugins listed below are sbt `AutoPlugins`,
 All core plugins listed below may be included in the project separately, or otherwise collectively using the following coordinates:
 
 ```scala
-addSbtPlugin("africa.shuwari.sbt", "sbt-shuwari", "0.9.0")
+addSbtPlugin("africa.shuwari.sbt" % "sbt-shuwari" % "0.9.2")
 ```
 
 |Includes:                                                                                                                                                             |
@@ -27,14 +27,12 @@ addSbtPlugin("africa.shuwari.sbt", "sbt-shuwari", "0.9.0")
 
 **For individual plugin dependency coordinates, see below:**
 
-### [ShuwariCorePlugin](modules/core/src/main/scala/africa/shuwari/sbt/ShuwariCorePlugin.scala)
+### [ShuwariCorePlugin](modules/core/src/main/scala/africa/shuwari/sbt/plugin.scala)
 
 Preconfigures projects with Shuwari Africa Ltd. project defaults.
   
-Specifically, sets `ThisBuild / crossScalaVersions`, `ThisBuild / organizationHomepage`, `ThisBuild / organizationName`, `ThisBuild / scalaVersion`,
-and `ThisBuild / scmInfo` to the values specified for the root project by default. For example, setting `scalaVersion`
-will also set the same value for `ThisBuild / scalaVersion`. _Note: No longer resolves circular dependencies caused by existing sbt defaults. the following_
-_settings must be set explicitly for the root project to avoid errors during project launch: `organizationHomepage`, `organizationName`, `scalaVersion`_
+Specifically, sets `ThisBuild / organizationHomepage`, `ThisBuild / organizationName`, and `ThisBuild / scmInfo` to the values specified for the root
+project by default. For example, setting `scalaVersion` will also set the same value for `ThisBuild / scalaVersion`. _Note: No longer resolves circular dependencies caused by existing sbt defaults. the following settings must be set explicitly for the root project to avoid errors during project launch: `organizationHomepage`, `organizationName`_
 
 Additionally, sets `organizationName`, `organizationHomepage`, `organization`, `apiURL`, `developers`, `homepage`, `licenses`, `startYear`, and `version`
 for all non-root projects to the values specified in the the root project by default. For example, setting `version` for the root project will propagate
@@ -58,13 +56,13 @@ lazy val `amazing-project` =
 It may be resolved via the following coordinates:
 
 ```scala
-addSbtPlugin("africa.shuwari.sbt", "sbt-shuwari-core", "0.9.0")
+addSbtPlugin("africa.shuwari.sbt" % "sbt-shuwari-core" % "0.9.2")
 ```
 
-### [ShuwariHeaderPlugin](modules/header/src/main/scala/africa/shuwari/sbt/ShuwariHeaderPlugin.scala)
+### [ShuwariHeaderPlugin](modules/header/src/main/scala/africa/shuwari/sbt/plugin.scala)
 
 Preconfigures the excellent [sbt-header](https://github.com/sbt/sbt-header) plugin to apply standardised
-Shuwari Africa source file headers dependent on whether tthe project is Open Source or otherwie.
+Shuwari Africa source file headers dependent on whether the project is Open Source or otherwie.
 
 The selection of which license header is applied is dependent on the `sbt.Keys.licences` setting value. Where
 `licenses` is empty, the default internal use header shall be applied; otherwise if `licenses` contains a single
@@ -73,7 +71,7 @@ member, denoting the Apache 2.0 License, then the default Apache 2.0 License hea
 It may be resolved via the following coordinates:
 
 ```scala
-addSbtPlugin("africa.shuwari.sbt", "sbt-shuwari-header", "0.9.0")
+addSbtPlugin("africa.shuwari.sbt" %  "sbt-shuwari-header" % "0.9.2")
 ```
 
 Additionally, a project's license may be specified explicitly by including either `internalSoftware`, or `apacheLicensed`
@@ -92,7 +90,7 @@ lazy val `amazing-project` =
     .internalSoftware
 ```
 
-### [BuildModePlugin](modules/mode/src/main/scala/africa/shuwari/sbt/BuildModePlugin.scala)
+### [BuildModePlugin](modules/mode/src/main/scala/africa/shuwari/sbt/plugin.scala)
 
 Provides a build scoped `buildMode` sbt `SettingKey` allowing the specification of separate settings dependent on
 current build environment; specifically one of `Mode.Development`, `Mode.Integration`, or `Mode.Release`.
@@ -109,10 +107,10 @@ modes: `DEVELOPMENT`, `INTEGRATION`, or `RELEASE`.
 It may be resolved via the following coordinates:
 
 ```scala
-addSbtPlugin("africa.shuwari.sbt", "sbt-shuwari-mode", "0.9.0")
+addSbtPlugin("africa.shuwari.sbt" %  "sbt-shuwari-mode" % "0.9.2")
 ```
 
-### [ScalacOptionsPlugin](modules/scalac/src/main/scala/africa/shuwari/sbt/ScalacOptionsPlugin.scala)
+### [ScalaOptionsPlugin](modules/scalac/src/main/scala/africa/shuwari/sbt/plugin.scala)
 
 Provides a set of default scalac compiler options based on the active  `buildMode`. Uses the excellent [sbt-tpolecat](https://github.com/typelevel/sbt-tpolecat)
 under the hood.
@@ -134,7 +132,7 @@ developmentBuildOptions := developmentBuildOpions.value ++ ScalacOptions.languag
 
 ## Supplementary Plugins
 
-### [ShuwariJsPlugin](modules/js/src/main/scala/africa/shuwari/ShuwariJsPlugin.scala)
+### [ShuwariJsPlugin](modules/js/src/main/scala/africa/shuwari/plugin.scala)
 
 Provides a set of default ScalaJS linker options based on the active  `buildMode` or specified `basePackage`.
 

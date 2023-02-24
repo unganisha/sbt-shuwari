@@ -1,5 +1,6 @@
 .bloop/
 .bsp/
+.idea/
 .mdoc/
 .metals/
 .sbt-shuwari*/

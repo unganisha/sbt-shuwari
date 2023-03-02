@@ -5,6 +5,5 @@
 //   def snapshotVersionFormat(describeOutput: GitDescribeOutput) = {
 
 //   }
-  
-  
+
 // }

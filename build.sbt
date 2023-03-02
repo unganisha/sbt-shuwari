@@ -20,7 +20,6 @@ inThisBuild(
     startYear := Some(2022),
     sonatypeCredentialHost := "s01.oss.sonatype.org",
     publishCredentials,
-    publishMavenStyle := true
   )
 )
 

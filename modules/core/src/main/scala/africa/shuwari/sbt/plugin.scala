@@ -18,7 +18,7 @@ object ShuwariCorePlugin extends AutoPlugin {
     )
 
   override def projectSettings: Seq[Setting[_]] =
-    commonSettings.toList
+    baseProjectSettings.toList
 
   object autoImport {
 

@@ -19,7 +19,7 @@ inThisBuild(
     scalacOptions ++= List("-feature", "-deprecation"),
     startYear := Some(2022),
     sonatypeCredentialHost := "s01.oss.sonatype.org",
-    publishCredentials,
+    publishCredentials
   )
 )
 

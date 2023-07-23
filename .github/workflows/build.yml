@@ -129,7 +129,7 @@ jobs:
           fetch-depth: 0
 
       - name: Synchronise Azure DevOps
-        uses: yesolutions/mirror-action@v0.6.0
+        uses: yesolutions/mirror-action@v0.7.0
         with:
           REMOTE: "git@ssh.dev.azure.com:v3/shuwari/sbt-shuwari/sbt-shuwari"
           GIT_SSH_PRIVATE_KEY: ${{ secrets.DEVOPS_SSH_PRIVATE_KEY }}

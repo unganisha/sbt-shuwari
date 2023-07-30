@@ -43,7 +43,7 @@ lazy val `sbt-shuwari-scalac` =
     .dependsOn(`sbt-shuwari-mode`)
     .settings(
       libraryDependencies ++= List(
-        "org.typelevel" %% "scalac-options" % "0.1.2"
+        "org.typelevel" %% "scalac-options" % "0.1.3"
       )
     )
     .settings(publishSettings)

@@ -43,7 +43,7 @@ object ScalaOptionsPlugin extends AutoPlugin {
     developmentOptions := ScalaCompilerOptions.developmentBuild.value,
     integrationOptions := ScalaCompilerOptions.integrationBuild.value,
     releaseOptions := ScalaCompilerOptions.releaseBuild.value,
-    Compile / Keys.scalacOptions := {
+    Compile / Keys.compile / Keys.scalacOptions := {
       val options = BuildModePlugin.buildMode.value match {
         case Mode.Development =>
           developmentOptions.value
@@ -55,7 +55,7 @@ object ScalaOptionsPlugin extends AutoPlugin {
         opt.option :: opt.args
       )
     },
-    Test / Keys.scalacOptions :=
+    Test / Keys.compile / Keys.scalacOptions :=
       ScalaCompilerOptions
         .optionsForVersion(
           Keys.version.value,

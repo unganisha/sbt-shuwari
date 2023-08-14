@@ -1,36 +1,30 @@
 package africa.shuwari.sbt
 
-import org.checkerframework.checker.nullness.Opt
-import sbt.{ScalaVersion => _, _}
+import africa.shuwari.sbt.BuildModePlugin.Mode
+import africa.shuwari.sbt.ScalaOptionsKeys.*
+import org.typelevel.scalacoptions.ScalacOption
+import sbt.{ScalaVersion as _, *}
 
-import scala.Ordering.Implicits._
 import scala.collection.GenTraversableOnce
 import scala.language.implicitConversions
-
-import africa.shuwari.sbt.BuildModePlugin.Mode
-import org.typelevel.scalacoptions.ScalacOption
-import org.typelevel.scalacoptions.ScalacOptions
-import org.typelevel.scalacoptions.ScalaVersion
-
-import africa.shuwari.sbt.ScalaOptionsKeys._
 
 object ScalaOptionsPlugin extends AutoPlugin {
 
   object autoImport {
 
-    val ScalaCompiler = ScalaOptionsKeys
-    val ScalacOption = org.typelevel.scalacoptions.ScalacOption
+    final val ScalaCompiler = ScalaOptionsKeys
+    final val ScalacOption = org.typelevel.scalacoptions.ScalacOption
     type ScalacOption = org.typelevel.scalacoptions.ScalacOption
 
-    implicit def optionsToOptionsOps(opts: Set[ScalacOption]) =
+    implicit def optionsToOptionsOps(opts: Set[ScalacOption]): OptionsOps =
       OptionsOps(opts)
   }
 
   final case class OptionsOps(opts: Set[ScalacOption]) extends AnyVal {
-    def and(option: ScalacOption) = opts + option
-    def and(options: GenTraversableOnce[ScalacOption]) = opts ++ options
-    def except(option: ScalacOption) = opts.filterNot(_ == option)
-    def except(options: GenTraversableOnce[ScalacOption]) =
+    def and(option: ScalacOption): Set[ScalacOption] = opts + option
+    def and(options: GenTraversableOnce[ScalacOption]): Set[ScalacOption] = opts ++ options
+    def except(option: ScalacOption): Set[ScalacOption] = opts.filterNot(_ == option)
+    def except(options: GenTraversableOnce[ScalacOption]): Set[ScalacOption] =
       opts.diff(options.toSet)
   }
 
@@ -38,7 +32,7 @@ object ScalaOptionsPlugin extends AutoPlugin {
 
   override def trigger: PluginTrigger = allRequirements
 
-  override def projectSettings: Seq[Setting[_]] = List(
+  override def projectSettings: Seq[Setting[?]] = List(
     basePackage := None,
     developmentOptions := ScalaCompilerOptions.developmentBuild.value,
     integrationOptions := ScalaCompilerOptions.integrationBuild.value,
@@ -58,7 +52,7 @@ object ScalaOptionsPlugin extends AutoPlugin {
     Test / Keys.compile / Keys.scalacOptions :=
       ScalaCompilerOptions
         .optionsForVersion(
-          Keys.version.value,
+          Keys.scalaVersion.value,
           developmentOptions.value,
           Keys.streams.value.log
         )

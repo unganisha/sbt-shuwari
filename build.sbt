@@ -7,7 +7,7 @@ inThisBuild(
       "Apache-2.0" -> url("https://www.apache.org/licenses/LICENSE-2.0")
     ),
     description := "Collection of sbt plugins for easy initialisation of uniform organisation wide default project settings.",
-    homepage := Some(url("https://github.com/unganisha/sbt-shuwari")),
+    homepage := Some(url("https://github.com/shuwari/sbt-shuwari")),
     version := versionSetting.value,
     dynver := versionSetting.toTaskable.toTask.value,
     scmInfo := Some(
@@ -42,9 +42,7 @@ lazy val `sbt-shuwari-scalac` =
     .enablePlugins(SbtPlugin)
     .dependsOn(`sbt-shuwari-mode`)
     .settings(
-      libraryDependencies ++= List(
-        "org.typelevel" %% "scalac-options" % "0.1.3"
-      )
+      addSbtPlugin("org.typelevel" % "sbt-tpolecat" % "0.5.0")
     )
     .settings(publishSettings)
 

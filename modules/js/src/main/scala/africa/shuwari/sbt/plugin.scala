@@ -16,24 +16,17 @@ object JSPlugin extends AutoPlugin {
 
   override def trigger: PluginTrigger = allRequirements
 
-  def scalaJsDottyOption =
-    ScalacOption("-scalajs", ScalaCompilerOptions.dottyOnly)
-
   override def projectSettings: Seq[Def.Setting[_]] = {
     import ScalaJSPlugin.autoImport.*
     Seq(
-      ScalaOptionsKeys.developmentOptions ~= (_ + scalaJsDottyOption),
       scalaJSLinkerConfig := defaultLinkerConfigOptions.value
     )
   }
 
   def defaultLinkerConfigOptions = Def.setting {
-    def explicitsplit =
-      ScalaOptionsKeys.basePackage.value.map(p =>
-        ModuleSplitStyle.SmallModulesFor(List(p))
-      )
-    def defaultSplit = if (
-      BuildModePlugin.buildMode.value == BuildModePlugin.Mode.Development
+    val basePackages = ScalaOptionsKeys.basePackages.value
+    def splitStyle = if (basePackages.nonEmpty) ModuleSplitStyle.SmallModulesFor(basePackages) else if (
+      BuildModePlugin.buildMode.value != BuildModePlugin.Mode.Development
     ) ModuleSplitStyle.FewestModules
     else ModuleSplitStyle.SmallestModules
 
@@ -41,6 +34,6 @@ object JSPlugin extends AutoPlugin {
       .withModuleKind(ModuleKind.ESModule)
       .withESFeatures(ESFeatures.Defaults)
       .withOutputPatterns(OutputPatterns.fromJSFile("%s.mjs"))
-      .withModuleSplitStyle(explicitsplit.getOrElse(defaultSplit))
+      .withModuleSplitStyle(splitStyle)
   }
 }

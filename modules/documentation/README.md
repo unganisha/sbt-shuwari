@@ -119,16 +119,7 @@ under the hood.
 | -------------------------------------------------------------------------------------------- |
 |[BuildModePlugin](#buildmodeplugin), [sbt-tpolecat](https://github.com/typelevel/sbt-tpolecat)|
 
-Introduces one new setting, `basePackage`, defining the package under which files to be optimised under production mode compilation are contained.
-
-Introduces 3 new tasks, `developmentBuildOptions`, `integrationBuildOptions`, and `releaseBuildOptions` speficying a Set[ScalacOption] to be applied dependent
-on the corresponding `buildMode`.
-
-Additional options can be appended to one of the above tasks, for example:
-
-```scala
-developmentBuildOptions := developmentBuildOpions.value ++ ScalacOptions.languageExperimentalMacros
-```
+Introduces one new setting, `basePackages`, defining the package under which files to be optimised under production mode compilation are contained.
 
 ## Supplementary Plugins
 

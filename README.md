@@ -18,7 +18,7 @@ _NB: Unless specified otherwise, all plugins listed below are sbt `AutoPlugins`,
 All core plugins listed below may be included in the project separately, or otherwise collectively using the following coordinates:
 
 ```scala
-addSbtPlugin("africa.shuwari.sbt" % "sbt-shuwari" % "0.9.7")
+addSbtPlugin("africa.shuwari.sbt" % "sbt-shuwari" % "0.10.0")
 ```
 
 |Includes:                                                                                                                                                             |
@@ -56,7 +56,7 @@ lazy val `amazing-project` =
 It may be resolved via the following coordinates:
 
 ```scala
-addSbtPlugin("africa.shuwari.sbt" % "sbt-shuwari-core" % "0.9.7")
+addSbtPlugin("africa.shuwari.sbt" % "sbt-shuwari-core" % "0.10.0")
 ```
 
 ### [ShuwariHeaderPlugin](modules/header/src/main/scala/africa/shuwari/sbt/plugin.scala)
@@ -71,7 +71,7 @@ member, denoting the Apache 2.0 License, then the default Apache 2.0 License hea
 It may be resolved via the following coordinates:
 
 ```scala
-addSbtPlugin("africa.shuwari.sbt" %  "sbt-shuwari-header" % "0.9.7")
+addSbtPlugin("africa.shuwari.sbt" %  "sbt-shuwari-header" % "0.10.0")
 ```
 
 Additionally, a project's license may be specified explicitly by including either `internalSoftware`, or `apacheLicensed`
@@ -107,7 +107,7 @@ modes: `DEVELOPMENT`, `INTEGRATION`, or `RELEASE`.
 It may be resolved via the following coordinates:
 
 ```scala
-addSbtPlugin("africa.shuwari.sbt" %  "sbt-shuwari-mode" % "0.9.7")
+addSbtPlugin("africa.shuwari.sbt" %  "sbt-shuwari-mode" % "0.10.0")
 ```
 
 ### [ScalaOptionsPlugin](modules/scalac/src/main/scala/africa/shuwari/sbt/plugin.scala)
@@ -119,16 +119,7 @@ under the hood.
 | -------------------------------------------------------------------------------------------- |
 |[BuildModePlugin](#buildmodeplugin), [sbt-tpolecat](https://github.com/typelevel/sbt-tpolecat)|
 
-Introduces one new setting, `basePackage`, defining the package under which files to be optimised under production mode compilation are contained.
-
-Introduces 3 new tasks, `developmentBuildOptions`, `integrationBuildOptions`, and `releaseBuildOptions` speficying a Set[ScalacOption] to be applied dependent
-on the corresponding `buildMode`.
-
-Additional options can be appended to one of the above tasks, for example:
-
-```scala
-developmentBuildOptions := developmentBuildOpions.value ++ ScalacOptions.languageExperimentalMacros
-```
+Introduces one new setting, `basePackages`, defining the package under which files to be optimised under production mode compilation are contained.
 
 ## Supplementary Plugins
 

@@ -63,9 +63,9 @@ object ScalaCompilerOptions {
   ): Def.Initialize[Set[ScalacOption]] = Def.setting {
     val base = basePackages.value
     def opts = developmentOptions.value
-    if (base.nonEmpty) {
+    if (base.nonEmpty)
       opts ++ options.optimizerOptions(base *)
-    } else opts
+    else opts
   }
 
 }

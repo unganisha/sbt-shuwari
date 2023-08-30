@@ -25,7 +25,9 @@ object JSPlugin extends AutoPlugin {
 
   def defaultLinkerConfigOptions = Def.setting {
     val basePackages = ScalaOptionsKeys.basePackages.value
-    def splitStyle = if (basePackages.nonEmpty) ModuleSplitStyle.SmallModulesFor(basePackages) else if (
+    def splitStyle = if (basePackages.nonEmpty)
+      ModuleSplitStyle.SmallModulesFor(basePackages)
+    else if (
       BuildModePlugin.buildMode.value != BuildModePlugin.Mode.Development
     ) ModuleSplitStyle.FewestModules
     else ModuleSplitStyle.SmallestModules

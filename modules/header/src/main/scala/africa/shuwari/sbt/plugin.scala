@@ -4,17 +4,14 @@ import de.heikoseeberger.sbtheader.CommentBlockCreator
 import de.heikoseeberger.sbtheader.CommentCreator
 import de.heikoseeberger.sbtheader.CommentStyle
 import de.heikoseeberger.sbtheader.HeaderPlugin
-import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport._
-import sbt.Keys._
-import sbt._
+import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.HeaderLicense
+import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.*
+import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.headerLicense
+import sbt.Keys.*
+import sbt.*
 import sbt.plugins.JvmPlugin
 
 import scala.language.implicitConversions
-
-import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.{
-  HeaderLicense,
-  headerLicense
-}
 
 object ShuwariHeaderPlugin extends AutoPlugin {
 
@@ -22,7 +19,7 @@ object ShuwariHeaderPlugin extends AutoPlugin {
 
   override def trigger: PluginTrigger = allRequirements
 
-  override def projectSettings: Seq[Setting[_]] = Seq(
+  override def projectSettings: Seq[Setting[?]] = Seq(
     headerMappings := {
       val scalaCommentStyleTypes =
         List(HeaderFileType.java, HeaderFileType.scala)
@@ -41,15 +38,15 @@ object ShuwariHeaderPlugin extends AutoPlugin {
   }
 
   final case class DefaultBlockCommentCreator(
-      commentPrefix: String,
-      commentSuffix: Option[String],
-      linePrefix: String,
-      lineSuffix: String,
-      boundaryCharacter: String,
-      postIndent: Boolean,
-      indentSize: Int,
-      preLengthModifier: Int,
-      postLengthModifier: Int
+    commentPrefix: String,
+    commentSuffix: Option[String],
+    linePrefix: String,
+    lineSuffix: String,
+    boundaryCharacter: String,
+    postIndent: Boolean,
+    indentSize: Int,
+    preLengthModifier: Int,
+    postLengthModifier: Int
   ) extends CommentCreator {
 
     override def apply(text: String, existingText: Option[String]): String = {

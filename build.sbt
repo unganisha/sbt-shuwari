@@ -7,19 +7,21 @@ inThisBuild(
       "Apache-2.0" -> url("https://www.apache.org/licenses/LICENSE-2.0")
     ),
     description := "Collection of sbt plugins for easy initialisation of uniform organisation wide default project settings.",
-    homepage := Some(url("https://github.com/shuwari/sbt-shuwari")),
+    homepage := Some(url("https://github.com/shuwariafrica/sbt-shuwari")),
     version := versionSetting.value,
     dynver := versionSetting.toTaskable.toTask.value,
     scmInfo := Some(
       ScmInfo(
         url("https://github.com/unganisha/sbt-shuwari"),
-        "scm:git@github.com:unganisha/sbt-shuwari.git"
+        "scm:git@github.com:shuwariafrica/sbt-shuwari.git"
       )
     ),
     scalacOptions ++= List("-feature", "-deprecation"),
     startYear := Some(2022),
     sonatypeCredentialHost := "s01.oss.sonatype.org",
-    publishCredentials
+    publishCredentials,
+    semanticdbEnabled := true,
+    semanticdbVersion := scalafixSemanticdb.revision
   )
 )
 
@@ -67,6 +69,14 @@ lazy val `sbt-shuwari-js` =
     .dependsOn(`sbt-shuwari-mode`, `sbt-shuwari-scalac`)
     .settings(addSbtPlugin("org.scala-js" % "sbt-scalajs" % "1.16.0"))
 
+lazy val `sbt-shuwari-cross` =
+  project
+    .in(modules("cross"))
+    .enablePlugins(SbtPlugin)
+    .dependsOn(`sbt-shuwari`)
+    .settings(publishSettings)
+    .settings(addSbtPlugin("org.portable-scala" % "sbt-crossproject" % "1.3.2"))
+
 lazy val `sbt-shuwari-documentation` =
   project
     .in(file(".sbt-shuwari-doc"))
@@ -89,6 +99,7 @@ lazy val `sbt-shuwari-build-root` =
       `sbt-shuwari-scalac`,
       `sbt-shuwari-core`,
       `sbt-shuwari`,
+      `sbt-shuwari-cross`,
       `sbt-shuwari-js`
     )
     .enablePlugins(SbtPlugin)

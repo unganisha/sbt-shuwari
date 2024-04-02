@@ -1,11 +1,13 @@
 package africa.shuwari.sbt
 
-import sbt._
+import sbt.*
 import sbt.plugins.JvmPlugin
 
 object BuildModePlugin extends AutoPlugin {
 
-  sealed trait Mode extends Product with Serializable
+  sealed trait Mode extends Product with Serializable {
+    def ===(mode: Mode) = this == mode // scalafix:ok
+  }
   object Mode {
     case object Development extends Mode
     case object Integration extends Mode
@@ -20,7 +22,7 @@ object BuildModePlugin extends AutoPlugin {
   override def trigger: PluginTrigger = allRequirements
   override def requires: Plugins = JvmPlugin
 
-  override def buildSettings: Seq[Setting[_]] = Seq(
+  override def buildSettings: Seq[Setting[?]] = Seq(
     buildMode := buildModeResolver.value
   )
 
@@ -35,7 +37,7 @@ object BuildModePlugin extends AutoPlugin {
 
     def modeIdentifier(mode: Mode): String =
       mode.getClass.getSimpleName
-        .dropWhile(_ == '$')
+        .dropWhile(_ == '$') // scalafix:ok
         .toLowerCase
 
     val modes: Map[String, Mode] =

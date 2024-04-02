@@ -1,20 +1,21 @@
 package africa.shuwari.sbt
 
+import org.typelevel.scalacoptions.ScalaVersion
 import org.typelevel.scalacoptions.ScalacOption
 import org.typelevel.scalacoptions.ScalacOptions
-import org.typelevel.scalacoptions.ScalaVersion
-import africa.shuwari.sbt.ScalaOptionsKeys.*
 import sbt.*
 
 import scala.util.Try
+
+import africa.shuwari.sbt.JSKeys.*
 
 object ScalaCompilerOptions {
 
   final val options = ScalacOptions
 
-  ScalacOptions.explain
+//  ScalacOptions.explain
 
-  def dottyOnly(v: ScalaVersion): Boolean = v.major == 3L
+  def dottyOnly(v: ScalaVersion): Boolean = v.major == 3L // scalafix:ok
 
   def checkMods: ScalacOption = options.privateOption("check-mods", dottyOnly)
 
@@ -54,17 +55,17 @@ object ScalaCompilerOptions {
     Def.setting(defaultOptions)
 
   def ciOptions(
-      releaseOptionsKey: SettingKey[Set[ScalacOption]]
+    releaseOptionsKey: SettingKey[Set[ScalacOption]]
   ): Def.Initialize[Set[ScalacOption]] =
     Def.setting(releaseOptionsKey.value + options.optimizerWarnings)
 
   def tpolecatReleaseOptionsSetting(
-      developmentOptions: SettingKey[Set[ScalacOption]]
+    developmentOptions: SettingKey[Set[ScalacOption]]
   ): Def.Initialize[Set[ScalacOption]] = Def.setting {
     val base = basePackages.value
     def opts = developmentOptions.value
     if (base.nonEmpty)
-      opts ++ options.optimizerOptions(base *)
+      opts ++ options.optimizerOptions(base*)
     else opts
   }
 

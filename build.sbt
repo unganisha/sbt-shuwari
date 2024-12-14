@@ -44,7 +44,7 @@ lazy val `sbt-shuwari-scalac` =
     .enablePlugins(SbtPlugin)
     .dependsOn(`sbt-shuwari-mode`)
     .settings(
-      addSbtPlugin("org.typelevel" % "sbt-tpolecat" % "0.5.0")
+      addSbtPlugin("org.typelevel" % "sbt-tpolecat" % "0.5.2")
     )
     .settings(publishSettings)
 

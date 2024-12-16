@@ -18,7 +18,7 @@ _NB: Unless specified otherwise, all plugins listed below are sbt `AutoPlugins`,
 All core plugins listed below may be included in the project separately, or otherwise collectively using the following coordinates:
 
 ```scala
-addSbtPlugin("africa.shuwari.sbt" % "sbt-shuwari" % "0.12.0")
+addSbtPlugin("africa.shuwari.sbt" % "sbt-shuwari" % "0.12.1")
 ```
 
 |Includes:                                                                                                                                                             |
@@ -56,7 +56,7 @@ lazy val `amazing-project` =
 It may be resolved via the following coordinates:
 
 ```scala
-addSbtPlugin("africa.shuwari.sbt" % "sbt-shuwari-core" % "0.12.0")
+addSbtPlugin("africa.shuwari.sbt" % "sbt-shuwari-core" % "0.12.1")
 ```
 
 ### [ShuwariHeaderPlugin](modules/header/src/main/scala/africa/shuwari/sbt/plugin.scala)
@@ -71,7 +71,7 @@ member, denoting the Apache 2.0 License, then the default Apache 2.0 License hea
 It may be resolved via the following coordinates:
 
 ```scala
-addSbtPlugin("africa.shuwari.sbt" %  "sbt-shuwari-header" % "0.12.0")
+addSbtPlugin("africa.shuwari.sbt" %  "sbt-shuwari-header" % "0.12.1")
 ```
 
 Additionally, a project's license may be specified explicitly by including either `internalSoftware`, or `apacheLicensed`
@@ -107,7 +107,7 @@ modes: `DEVELOPMENT`, `INTEGRATION`, or `RELEASE`.
 It may be resolved via the following coordinates:
 
 ```scala
-addSbtPlugin("africa.shuwari.sbt" %  "sbt-shuwari-mode" % "0.12.0")
+addSbtPlugin("africa.shuwari.sbt" %  "sbt-shuwari-mode" % "0.12.1")
 ```
 
 ### [ScalaOptionsPlugin](modules/scalac/src/main/scala/africa/shuwari/sbt/plugin.scala)

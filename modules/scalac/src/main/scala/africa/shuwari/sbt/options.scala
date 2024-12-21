@@ -3,9 +3,10 @@ package africa.shuwari.sbt
 import org.typelevel.scalacoptions.ScalaVersion
 import org.typelevel.scalacoptions.ScalacOption
 import org.typelevel.scalacoptions.ScalacOptions
-import sbt.*
 
 import scala.util.Try
+
+import sbt.*
 
 import africa.shuwari.sbt.JSKeys.*
 

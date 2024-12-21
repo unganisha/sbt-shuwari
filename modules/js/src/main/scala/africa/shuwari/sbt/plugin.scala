@@ -7,6 +7,7 @@ import org.scalajs.linker.interface.OutputPatterns
 import org.scalajs.linker.interface.StandardConfig
 import org.scalajs.sbtplugin.ScalaJSPlugin
 import org.typelevel.scalacoptions.ScalacOption
+
 import sbt.Keys.*
 import sbt.*
 

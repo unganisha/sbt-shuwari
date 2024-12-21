@@ -5,9 +5,10 @@ import org.typelevel.sbt.tpolecat.ReleaseMode
 import org.typelevel.sbt.tpolecat.TpolecatPlugin
 import org.typelevel.sbt.tpolecat.VerboseMode
 import org.typelevel.scalacoptions.ScalacOption
-import sbt.{ScalaVersion as _, *}
 
 import scala.collection.GenTraversableOnce
+
+import sbt.{ScalaVersion as _, *}
 
 import africa.shuwari.sbt.BuildModePlugin.Mode
 import africa.shuwari.sbt.JSKeys.*

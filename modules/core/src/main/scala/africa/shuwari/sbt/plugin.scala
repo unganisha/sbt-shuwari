@@ -109,12 +109,12 @@ object ShuwariCorePlugin extends AutoPlugin {
   private def baseProjectSettings =
     projectKeys.map(fromRoot(_)) + pomIncludeRepositorySetting
 
-  private def fromRoot[A](key: SettingKey[A]): Setting[A] =
+  @inline private[sbt] def fromRoot[A](key: SettingKey[A]): Setting[A] =
     key := (LocalRootProject / key).value
 
   private type SettingPair[A] = (SettingKey[A], A)
 
-  private def circularReferenceDefaults(defaults: SettingPair[?]*) = {
+  @inline private[sbt] def circularReferenceDefaults(defaults: SettingPair[?]*) = {
     def circ[A](pair: SettingPair[A]) =
       pair._1 := Option((LocalRootProject / pair._1).value).getOrElse(pair._2)
     defaults.map(kv => circ(kv))

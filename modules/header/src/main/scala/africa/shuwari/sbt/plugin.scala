@@ -8,12 +8,10 @@ import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.HeaderPattern
 import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport.*
 import de.heikoseeberger.sbtheader.License
 import de.heikoseeberger.sbtheader.LicenseDetection
-
 import sbt.Def
 import sbt.Keys.*
 import sbt.URL
 import sbt.*
-import sbt.plugins.JvmPlugin
 
 import scala.language.implicitConversions
 
@@ -23,7 +21,7 @@ object ShuwariHeaderPlugin extends AutoPlugin {
     "The name of the organization or individual that holds the copyright."
   )
 
-  override def requires: Plugins = JvmPlugin && HeaderPlugin
+  override def requires: Plugins = ShuwariCorePlugin && HeaderPlugin
 
   override def trigger: PluginTrigger = allRequirements
 
@@ -39,7 +37,8 @@ object ShuwariHeaderPlugin extends AutoPlugin {
       headerMappings.value ++ scalaCommentStyleTypes
     },
     headerEmptyLine := false,
-    headerLicense := defaultLicensing.value
+    headerLicense := defaultLicensing.value,
+    ShuwariCorePlugin.fromRoot(headerCopyrightHolder)
   )
 
   object autoImport {

@@ -25,6 +25,12 @@ inThisBuild(
   )
 )
 
+lazy val `sbt-shuwari-core` =
+  project
+    .in(modules("core"))
+    .enablePlugins(SbtPlugin)
+    .settings(publishSettings)
+
 lazy val `sbt-shuwari-mode` =
   project
     .in(modules("mode"))
@@ -34,6 +40,7 @@ lazy val `sbt-shuwari-mode` =
 lazy val `sbt-shuwari-header` =
   project
     .in(modules("header"))
+    .dependsOn(`sbt-shuwari-core`)
     .enablePlugins(SbtPlugin)
     .settings(addSbtPlugin("de.heikoseeberger" % "sbt-header" % "5.10.0"))
     .settings(publishSettings)
@@ -46,12 +53,6 @@ lazy val `sbt-shuwari-scalac` =
     .settings(
       addSbtPlugin("org.typelevel" % "sbt-tpolecat" % "0.5.2")
     )
-    .settings(publishSettings)
-
-lazy val `sbt-shuwari-core` =
-  project
-    .in(modules("core"))
-    .enablePlugins(SbtPlugin)
     .settings(publishSettings)
 
 lazy val `sbt-shuwari` =
